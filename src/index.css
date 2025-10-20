@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 224 37% 15%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 224 37% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 263 70% 65%;
+    --primary-foreground: 210 40% 98%;
+    
+    --primary-glow: 263 85% 75%;
+
+    --secondary: 217 33% 25%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 263 70% 65%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 25%;
+    --input: 217 33% 25%;
+    --ring: 263 70% 65%;
+
+    --radius: 0.75rem;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(263 70% 65%), hsl(220 90% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(263 70% 65% / 0.1), hsl(220 90% 60% / 0.1));
+    --gradient-card: linear-gradient(135deg, hsl(224 37% 15%), hsl(224 37% 18%));
+    
+    /* Shadows */
+    --shadow-glow: 0 0 40px hsl(263 70% 65% / 0.3);
+    --shadow-card: 0 8px 32px hsl(222 47% 11% / 0.5);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "liga" 1, "calt" 1;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent;
+  }
+}

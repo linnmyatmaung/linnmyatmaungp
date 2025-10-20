@@ -1,0 +1,177 @@
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+
+const Contact = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Message Sent!",
+      description: "Thank you for reaching out. I'll get back to you soon.",
+    });
+    setFormData({ name: "", email: "", message: "" });
+  };
+
+  const contactInfo = [
+    {
+      icon: Mail,
+      label: "Email",
+      value: "linnmyatmaung03@gmail.com",
+      href: "mailto:linnmyatmaung03@gmail.com",
+    },
+    {
+      icon: Phone,
+      label: "Phone",
+      value: "+959 696265132",
+      href: "#",
+    },
+    {
+      icon: MapPin,
+      label: "Location",
+      value: "Yangon, Myanmar",
+      href: "#",
+    },
+  ];
+
+  return (
+    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 relative">
+      <div className="container mx-auto max-w-6xl">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            Get In <span className="text-gradient">Touch</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Have a project in mind or want to collaborate? Feel free to reach
+            out!
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+          {/* Contact Form */}
+          <Card className="gradient-card border-border p-6 lg:p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Name
+                </label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  className="bg-background border-border focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  required
+                  className="bg-background border-border focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium mb-2"
+                >
+                  Message
+                </label>
+                <Textarea
+                  id="message"
+                  placeholder="Tell me about your project..."
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                  required
+                  rows={6}
+                  className="bg-background border-border focus:border-primary resize-none"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full gradient-primary text-white hover:opacity-90 transition-smooth shadow-glow text-lg py-6"
+              >
+                Send Message
+              </Button>
+            </form>
+          </Card>
+
+          {/* Contact Info */}
+          <div className="space-y-6">
+            {contactInfo.map((info, index) => (
+              <Card
+                key={index}
+                className="gradient-card border-border hover:border-primary transition-smooth p-6 group hover:shadow-glow"
+              >
+                <a
+                  href={info.href}
+                  className="flex items-start gap-4"
+                  target={info.label === "Email" ? "_blank" : undefined}
+                  rel={
+                    info.label === "Email" ? "noopener noreferrer" : undefined
+                  }
+                >
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-smooth">
+                    <info.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-lg mb-1">{info.label}</h3>
+                    <p className="text-muted-foreground">{info.value}</p>
+                  </div>
+                </a>
+              </Card>
+            ))}
+
+            {/* Additional Info */}
+            <Card className="gradient-card border-border p-6">
+              <h3 className="font-semibold text-lg mb-3">
+                Let's Work Together
+              </h3>
+              <p className="text-muted-foreground">
+                I'm always interested in hearing about new projects and
+                opportunities. Whether you have a question or just want to say
+                hi, I'll try my best to get back to you!
+              </p>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Contact;
