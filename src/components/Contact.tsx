@@ -24,25 +24,6 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // If EmailJS is not configured, fallback to mailto
-    if (!serviceId || !templateId || !publicKey) {
-      const subject = encodeURIComponent(`Portfolio Contact from ${formData.name}`);
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      );
-      window.open(
-        `mailto:linnmyatmaung03@gmail.com?subject=${subject}&body=${body}`,
-        "_blank"
-      );
-      toast({
-        title: "Opening Email Client",
-        description:
-          "Your email client will open with the message pre-filled. EmailJS keys not set — see .env.local.example.",
-      });
-      setFormData({ name: "", email: "", message: "" });
-      return;
-    }
-
     setIsLoading(true);
     try {
       const response = await fetch("/api/contact", {
