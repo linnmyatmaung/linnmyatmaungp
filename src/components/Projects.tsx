@@ -91,15 +91,15 @@ const Projects = () => {
             <CarouselContent className="-ml-2 md:-ml-4">
               {projects.map((project, index) => (
                 <CarouselItem
-                  key={index}
+                  key={project.title}
                   className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-[45%]"
                 >
                   <Card
                     className={cn(
                       "gradient-card border-border/80 overflow-hidden transition-all duration-500 group bg-white/90 backdrop-blur-sm",
                       current === index
-                        ? "border-primary/50 shadow-glow scale-[1.02]"
-                        : "opacity-75 scale-[0.97] hover:opacity-90"
+                        ? "relative z-10 border-primary shadow-glow scale-[1.06] opacity-100"
+                        : "opacity-55 scale-[0.88] hover:opacity-80"
                     )}
                   >
                     <div className="relative aspect-video overflow-hidden bg-muted">
@@ -110,15 +110,6 @@ const Projects = () => {
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 520px"
                       />
-                      {/* Fallback gradient thumbnail since all use same image */}
-                      <div className="hidden">
-                        <div className="text-center p-4">
-                          <div className="text-4xl mb-2">🚀</div>
-                          <p className="text-sm text-muted-foreground font-medium">
-                            {project.title}
-                          </p>
-                        </div>
-                      </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent" />
                     </div>
 

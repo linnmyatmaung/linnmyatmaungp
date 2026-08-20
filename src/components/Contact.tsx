@@ -9,15 +9,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useInView } from "@/hooks/use-in-view";
 import { cn } from "@/lib/utils";
-import emailjs from "@emailjs/browser";
 
-// ─── EmailJS config ────────────────────────────────────────────────────────
-// Set these in your .env.local file:
-//   NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxxxxxx
-//   NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxxxxxx
-//   NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-// Sign up free at https://www.emailjs.com/
-// ──────────────────────────────────────────────────────────────────────────
 
 const Contact = () => {
   const { ref, inView } = useInView();
@@ -31,10 +23,6 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
     // If EmailJS is not configured, fallback to mailto
     if (!serviceId || !templateId || !publicKey) {
@@ -57,18 +45,13 @@ const Contact = () => {
 
     setIsLoading(true);
     try {
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_email: "linnmyatmaung03@gmail.com",
-          reply_to: formData.email,
-        },
-        publicKey
-      );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Message could not be sent");
 
       toast({
         title: "✅ Message Sent!",
