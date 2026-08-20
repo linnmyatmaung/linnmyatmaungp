@@ -1,0 +1,43 @@
+[
+  {
+    "title": "Personal Chatbot with LangChain",
+    "description": "A personal chatbot web app with real-time conversation, memory, and customizable prompts, featuring an admin dashboard for management.",
+    "tech": ["LangChain", "React", "Express.js", "MySQL", "Socket.io"],
+    "github": "https://github.com/linnmyatmaung/Generative_AI",
+    "live": "https://github.com/linnmyatmaung/Generative_AI",
+    "thumbnail": "/images/triphub-thumbnail.jpg"
+  },
+  {
+    "title": "Bus Management System & Digital E-ticket Purchasing",
+    "description": "A bus ticketing and management system with real-time booking, route management, and AI chatbot support.",
+    "tech": ["Spring Boot", "React", "Python", "MySQL"],
+    "github": "https://github.com/linnmyatmaung/triphub_thymeleaf",
+    "live": "https://triphubbusticket.vercel.app/",
+    "thumbnail": "/images/triphub-thumbnail.jpg"
+  },
+  {
+    "title": "Scannova: QR/Barcode Card System",
+    "description": "A secure QR/barcode-powered platform for ID card generation, scanning, and real-time verification.",
+    "tech": ["React", "Node.js", "Express", "MongoDB"],
+    "github": "https://github.com/linnmyatmaung/SmartEvent",
+    "live": "https://drive.google.com/file/d/1C-LYLwZl-a1rUQ3QIyWclWLiZEQNVFd0/view",
+    "thumbnail": "/images/triphub-thumbnail.jpg"
+  },
+  {
+    "title": "UTYCC King/Queen Voting System",
+    "description": "A web-based voting platform with an admin dashboard to manage agendas and view real-time results.",
+    "tech": [
+      "TypeScript",
+      "Express.js",
+      "TypeORM",
+      "React",
+      "Socket.io",
+      "JWT",
+      "MySQL",
+      "Cloudinary"
+    ],
+    "github": "https://github.com/linnmyatmaung/utycc-welcome",
+    "live": "https://github.com/linnmyatmaung/utycc-welcome",
+    "thumbnail": "/images/triphub-thumbnail.jpg"
+  }
+]

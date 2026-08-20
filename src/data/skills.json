@@ -1,0 +1,55 @@
+[
+  {
+    "category": "Frontend",
+    "skills": [
+      "React",
+      "TypeScript",
+      "Next.js",
+      "Tailwind CSS",
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "Redux",
+      "Vue.js"
+    ]
+  },
+  {
+    "category": "Backend",
+    "skills": [
+      "Node.js",
+      "Express",
+      "Python",
+      "Django",
+      "Sprong BootI",
+      "REST APIs",
+      "GraphQL",
+      "Microservices"
+    ]
+  },
+  {
+    "category": "Database & Cloud",
+    "skills": [
+      "PostgreSQL",
+      "MongoDB",
+      "MySQL",
+      "Redis",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "Firebase"
+    ]
+  },
+  {
+    "category": "Tools & Others",
+    "skills": [
+      "Git",
+      "GitHub",
+      "CI/CD",
+      "Jest",
+      "Webpack",
+      "Vite",
+      "Linux",
+      "Agile"
+    ]
+  }
+]

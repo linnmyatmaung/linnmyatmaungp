@@ -1,3 +1,5 @@
+"use client";
+
 import { Github, Linkedin, Facebook, Heart } from "lucide-react";
 
 const Footer = () => {
@@ -18,16 +20,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border py-8 px-4 sm:px-6 lg:px-8">
+    <footer
+      className="border-t border-primary/10 py-10 px-4 sm:px-6 lg:px-8 bg-white/50 backdrop-blur-sm"
+      style={{ zIndex: 1, position: "relative" }}
+    >
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          {/* Copyright */}
           <div className="flex items-center gap-2 text-muted-foreground">
-            <span>© {currentYear}, Lucas. Made with</span>
-            <Heart className="h-4 w-4 text-primary fill-primary" />
+            <span>© {currentYear}, Linn Myat Maung. Made with</span>
+            <Heart className="h-4 w-4 text-primary fill-primary animate-pulse" />
           </div>
 
-          {/* Social Links */}
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => (
               <a
@@ -35,7 +38,7 @@ const Footer = () => {
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-smooth"
+                className="text-muted-foreground hover:text-primary hover:scale-110 transition-smooth"
                 aria-label={social.label}
               >
                 <social.icon className="h-5 w-5" />
