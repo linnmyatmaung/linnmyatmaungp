@@ -3,14 +3,14 @@
     "category": "Frontend",
     "skills": [
       "React",
+      "ReactNative",
+      "Flutter",
       "TypeScript",
       "Next.js",
       "Tailwind CSS",
       "HTML5",
       "CSS3",
-      "JavaScript",
-      "Redux",
-      "Vue.js"
+      "Redux"
     ]
   },
   {
@@ -18,9 +18,9 @@
     "skills": [
       "Node.js",
       "Express",
-      "Python",
+      "FastApi",
       "Django",
-      "Sprong BootI",
+      "Spring Boot",
       "REST APIs",
       "GraphQL",
       "Microservices"
