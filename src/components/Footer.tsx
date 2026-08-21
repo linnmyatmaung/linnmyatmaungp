@@ -27,7 +27,7 @@ const Footer = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <span>© {currentYear}, Linn Myat Maung. Made with</span>
+            <span>© {currentYear}, Linn Myat Maung</span>
           </div>
 
           <div className="flex items-center gap-4">

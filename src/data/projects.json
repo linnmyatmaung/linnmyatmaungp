@@ -1,11 +1,35 @@
-[
+[ 
+  {
+    "title": "GYMOS — Real-Time AI Fitness & Nutrition Coach",
+    "description": "An AI photo calorie counter, automated planner, and on-device AI Pose Corrector providing Burmese voice feedback.",
+    "tech": ["Python", "React", "MediaPipe","FastApi","HuggingFace"],
+    "github": "https://github.com/linnmyatmaung/gymos-myanmar-member",
+    "live": "https://gymos-myanmar.vercel.app",
+    "thumbnail": "/images/gymos.jpg"
+  },
+  {
+    "title": "UTYCC Fresher Welcome - 2026",
+    "description": "A web application for voting UTYCC King/Queen selection and QR food coupon verification for shopkeeper in Fresher Welcome.",
+    "tech": ["Node.js", "React", "Typescript","postgres"],
+    "github": "https://github.com/linnmyatmaung/utycc-fresher-welcome-backend",
+    "live": "https://youtu.be/5WOR1xPRbQM?si=VJCtb5P39Xwn3QEE",
+    "thumbnail": "/images/utycc-2026.jpg"
+  },
+   {
+    "title": "Sanpal - Finance Tracker App",
+    "description": "A personal finance tracker app built with React Native and Expo, featuring financial anlysis and approximate budget saving plan.",
+    "tech": ["ReactNative", "Expo", "Cross Platform"],
+    "github": "https://github.com/linnmyatmaung/Sanpal",
+    "live": "https://github.com/linnmyatmaung/Sanpal",
+    "thumbnail": "/images/Sanpal.jpg"
+  },
   {
     "title": "Personal Chatbot with LangChain",
     "description": "A personal chatbot web app with real-time conversation, memory, and customizable prompts, featuring an admin dashboard for management.",
-    "tech": ["LangChain", "React", "Express.js", "MySQL", "Socket.io"],
+    "tech": ["LangChain", "Next.js", "Express.js", "MySQL", "Socket.io"],
     "github": "https://github.com/linnmyatmaung/Generative_AI",
     "live": "https://github.com/linnmyatmaung/Generative_AI",
-    "thumbnail": "/images/triphub-thumbnail.jpg"
+    "thumbnail": "/images/bot.jpg"
   },
   {
     "title": "Bus Management System & Digital E-ticket Purchasing",
@@ -20,11 +44,11 @@
     "description": "A secure QR/barcode-powered platform for ID card generation, scanning, and real-time verification.",
     "tech": ["React", "Node.js", "Express", "MongoDB"],
     "github": "https://github.com/linnmyatmaung/SmartEvent",
-    "live": "https://drive.google.com/file/d/1C-LYLwZl-a1rUQ3QIyWclWLiZEQNVFd0/view",
-    "thumbnail": "/images/triphub-thumbnail.jpg"
+    "live": "https://youtu.be/5-8mej8YLWg?si=9FWEn0c3oSho5OdO",
+    "thumbnail": "/images/event.jpg"
   },
   {
-    "title": "UTYCC King/Queen Voting System",
+    "title": "UTYCC King/Queen Voting System - 2025",
     "description": "A web-based voting platform with an admin dashboard to manage agendas and view real-time results.",
     "tech": [
       "TypeScript",
@@ -38,6 +62,14 @@
     ],
     "github": "https://github.com/linnmyatmaung/utycc-welcome",
     "live": "https://github.com/linnmyatmaung/utycc-welcome",
-    "thumbnail": "/images/triphub-thumbnail.jpg"
+    "thumbnail": "/images/utycc-2025.jpg"
+  },
+  {
+    "title": "Zodiac Sign Website",
+    "description": "A Zodiac Sign Website that can predict your future.",
+    "tech": ["HTML5", "CSS3", "Javascript", "Tailwind"],
+    "github": "https://github.com/linnmyatmaung/Astro12",
+    "live": "https://astro12.onrender.com/",
+    "thumbnail": "/images/astro.jpg"
   }
 ]

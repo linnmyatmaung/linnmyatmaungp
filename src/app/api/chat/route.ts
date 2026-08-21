@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     }
 
     if (!process.env.OPENROUTER_API_KEY) {
-      return NextResponse.json({ error: "Chat is not configured yet." }, { status: 503 });
+      return NextResponse.json({ error: " not configured yet." }, { status: 503 });
     }
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
