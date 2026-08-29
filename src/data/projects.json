@@ -1,5 +1,13 @@
 [ 
   {
+    "title": "EcoKid — Turn the World Into a Classroom",
+    "description": "An AI photo calorie counter, automated planner, and on-device AI Pose Corrector providing Burmese voice feedback.",
+    "tech": [ "Next", "Typescript","Veo 3.1","NVIDIA Nemotron 3","OpenRouter"],
+    "github": "https://github.com/linnmyatmaung/EcoKid",
+    "live": "https://eco-kid.vercel.app/",
+    "thumbnail": "/images/EcoKid.jpg"
+  },
+  {
     "title": "GYMOS — Real-Time AI Fitness & Nutrition Coach",
     "description": "An AI photo calorie counter, automated planner, and on-device AI Pose Corrector providing Burmese voice feedback.",
     "tech": ["Python", "React", "MediaPipe","FastApi","HuggingFace"],
