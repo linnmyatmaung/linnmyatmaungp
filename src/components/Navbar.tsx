@@ -38,7 +38,7 @@ const Navbar = () => {
   };
 
   const cvLink =
-    "https://drive.google.com/file/d/1IB0CldkjZJ7yDue-s5W0p_oSVX7_g7hF/view?usp=sharing";
+    "https://drive.google.com/file/d/1N2ECfP55KZ-kiwAE2zZ737WzcVj52zTm";
 
   const navLinkClass =
     "text-foreground/80 hover:text-primary transition-smooth relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full";
