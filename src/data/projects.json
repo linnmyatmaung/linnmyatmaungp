@@ -1,7 +1,7 @@
 [ 
   {
     "title": "EcoKid — Turn the World Into a Classroom",
-    "description": "An AI photo calorie counter, automated planner, and on-device AI Pose Corrector providing Burmese voice feedback.",
+    "description": "An AI-powered discovery app that identifies objects via camera, and auto-generates educational animations."
     "tech": [ "Next", "Typescript","Veo 3.1","NVIDIA Nemotron 3","OpenRouter"],
     "github": "https://github.com/linnmyatmaung/EcoKid",
     "live": "https://eco-kid.vercel.app/",
