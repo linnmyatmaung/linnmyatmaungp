@@ -5,6 +5,7 @@ export type Education = {
   notes: string;
   degree: string;
   activities: string;
+  logo: string | null;
 };
 
 export type Position = {
@@ -14,6 +15,7 @@ export type Position = {
   location: string;
   startedOn: string;
   finishedOn: string;
+  logo: string | null;
 };
 
 export type Certification = {

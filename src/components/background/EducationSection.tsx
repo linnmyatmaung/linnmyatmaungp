@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { useInView } from "@/hooks/use-in-view";
 import { formatDateRange, type Education } from "@/lib/background";
@@ -49,8 +50,23 @@ const EducationSection = ({ items }: EducationSectionProps) => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-smooth">
-                  <GraduationCap className="h-6 w-6 text-primary" />
+                <div className="w-16 h-16 shrink-0 rounded-2xl bg-white border border-border/70 overflow-hidden flex items-center justify-center shadow-soft group-hover:scale-105 transition-smooth">
+                  {item.logo ? (
+                    <Image
+                      src={item.logo}
+                      alt={`${item.school} logo`}
+                      width={64}
+                      height={64}
+                      className={cn(
+                        "h-full w-full",
+                        item.logo.includes("utycc")
+                          ? "object-cover"
+                          : "object-contain p-1"
+                      )}
+                    />
+                  ) : (
+                    <GraduationCap className="h-7 w-7 text-primary" />
+                  )}
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-primary mb-1">

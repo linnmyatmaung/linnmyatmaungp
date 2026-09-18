@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { useInView } from "@/hooks/use-in-view";
 import { formatDateRange, type Position } from "@/lib/background";
@@ -49,8 +50,25 @@ const PositionsSection = ({ items }: PositionsSectionProps) => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-smooth">
-                  <Briefcase className="h-6 w-6 text-primary" />
+                <div
+                  className={cn(
+                    "w-16 h-16 shrink-0 rounded-2xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-smooth",
+                    item.logo?.includes("ayo")
+                      ? "bg-black border border-border/70 shadow-soft"
+                      : "bg-transparent"
+                  )}
+                >
+                  {item.logo ? (
+                    <Image
+                      src={item.logo}
+                      alt={`${item.company} logo`}
+                      width={64}
+                      height={64}
+                      className="h-full w-full object-contain p-1"
+                    />
+                  ) : (
+                    <Briefcase className="h-6 w-6 text-primary" />
+                  )}
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-primary mb-1">

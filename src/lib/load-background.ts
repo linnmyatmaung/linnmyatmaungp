@@ -16,16 +16,34 @@ function monthYearValue(value: string): number {
   return isValid(date) ? date.getTime() : 0;
 }
 
+function educationLogo(school: string): string | null {
+  const name = school.toLowerCase();
+  if (name.includes("people")) return "/images/education/uopeople.png";
+  if (
+    name.includes("yatanarpon") ||
+    name.includes("yadanabon") ||
+    name.includes("cyber city") ||
+    name.includes("utycc")
+  ) {
+    return "/images/education/utycc.png";
+  }
+  return null;
+}
+
 export function loadEducation(): Education[] {
   return readCsv("Education.csv")
-    .map((row) => ({
-      school: row["School Name"] ?? "",
-      startDate: row["Start Date"] ?? "",
-      endDate: row["End Date"] ?? "",
-      notes: row["Notes"] ?? "",
-      degree: row["Degree Name"] ?? "",
-      activities: row["Activities"] ?? "",
-    }))
+    .map((row) => {
+      const school = row["School Name"] ?? "";
+      return {
+        school,
+        startDate: row["Start Date"] ?? "",
+        endDate: row["End Date"] ?? "",
+        notes: row["Notes"] ?? "",
+        degree: row["Degree Name"] ?? "",
+        activities: row["Activities"] ?? "",
+        logo: educationLogo(school),
+      };
+    })
     .filter((item) => item.school)
     .sort((a, b) => {
       const aPinned = a.degree.toLowerCase().includes("bachelor of engineering")
@@ -39,16 +57,34 @@ export function loadEducation(): Education[] {
     });
 }
 
+function positionLogo(company: string): string | null {
+  const name = company.toLowerCase();
+  if (name.includes("healthy") || name.includes("happy")) {
+    return "/images/positions/hnh.png";
+  }
+  if (name.includes("asean youth") || name.includes("ayo")) {
+    return "/images/positions/ayo.png";
+  }
+  if (name.includes("galaxy")) {
+    return "/images/positions/galaxy.png";
+  }
+  return null;
+}
+
 export function loadPositions(): Position[] {
   return readCsv("Positions.csv")
-    .map((row) => ({
-      company: row["Company Name"] ?? "",
-      title: row["Title"] ?? "",
-      description: row["Description"] ?? "",
-      location: row["Location"] ?? "",
-      startedOn: row["Started On"] ?? "",
-      finishedOn: row["Finished On"] ?? "",
-    }))
+    .map((row) => {
+      const company = row["Company Name"] ?? "";
+      return {
+        company,
+        title: row["Title"] ?? "",
+        description: row["Description"] ?? "",
+        location: row["Location"] ?? "",
+        startedOn: row["Started On"] ?? "",
+        finishedOn: row["Finished On"] ?? "",
+        logo: positionLogo(company),
+      };
+    })
     .filter((item) => item.company || item.title)
     .sort((a, b) => monthYearValue(b.startedOn) - monthYearValue(a.startedOn));
 }
