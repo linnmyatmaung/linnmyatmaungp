@@ -1,5 +1,13 @@
 [ 
   {
+    "title": "Custom Search Engine Optimization(SEO)",
+    "description": "A custom search engine for finding the most relevant websites for a topic, keyword, or question.",
+    "tech": [ "Next","Crawling","Extracting","Ranking", "Typescript"],
+    "github": "https://github.com/linnmyatmaung/SEO",
+    "live": "https://myfirstseo.netlify.app/",
+    "thumbnail": "/images/SEO.jpg"
+  },
+  {
     "title": "EcoKid — Turn the World Into a Classroom",
     "description": "An AI-powered discovery app that identifies objects via camera, and auto-generates educational animations.",
     "tech": [ "Next", "Typescript","Veo 3.1","NVIDIA Nemotron 3","OpenRouter"],
