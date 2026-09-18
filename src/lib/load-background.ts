@@ -27,7 +27,16 @@ export function loadEducation(): Education[] {
       activities: row["Activities"] ?? "",
     }))
     .filter((item) => item.school)
-    .sort((a, b) => monthYearValue(b.startDate) - monthYearValue(a.startDate));
+    .sort((a, b) => {
+      const aPinned = a.degree.toLowerCase().includes("bachelor of engineering")
+        ? 0
+        : 1;
+      const bPinned = b.degree.toLowerCase().includes("bachelor of engineering")
+        ? 0
+        : 1;
+      if (aPinned !== bPinned) return aPinned - bPinned;
+      return monthYearValue(b.startDate) - monthYearValue(a.startDate);
+    });
 }
 
 export function loadPositions(): Position[] {
