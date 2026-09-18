@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import Autoplay from "embla-carousel-autoplay";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -28,10 +27,18 @@ type CertificationsCarouselProps = {
   items: Certification[];
 };
 
+const DEFAULT_CERT_NAME = "cursor ai hackathon";
+
 const CertificationsCarousel = ({ items }: CertificationsCarouselProps) => {
   const { ref, inView } = useInView();
+  const defaultIndex = useMemo(() => {
+    const index = items.findIndex((item) =>
+      item.name.toLowerCase().includes(DEFAULT_CERT_NAME)
+    );
+    return index >= 0 ? index : 0;
+  }, [items]);
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(defaultIndex);
 
   const onSelect = useCallback((carouselApi: CarouselApi) => {
     if (!carouselApi) return;
@@ -80,14 +87,8 @@ const CertificationsCarousel = ({ items }: CertificationsCarouselProps) => {
               align: "center",
               loop: true,
               dragFree: false,
+              startIndex: defaultIndex,
             }}
-            plugins={[
-              Autoplay({
-                delay: 5000,
-                stopOnInteraction: true,
-                stopOnMouseEnter: true,
-              }),
-            ]}
             className="w-full"
           >
             <CarouselContent className="-ml-2 md:-ml-4">
