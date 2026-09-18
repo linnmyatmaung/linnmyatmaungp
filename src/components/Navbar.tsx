@@ -3,17 +3,40 @@
 import { Github, Linkedin, Facebook, FileText, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+
+const homeLinks = [
+  { label: "About", id: "about" },
+  { label: "Skills", id: "skills" },
+  { label: "Projects", id: "projects" },
+] as const;
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isBackground = pathname === "/background";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isHome) return;
+    const hash = window.location.hash.replace("#", "");
+    if (!hash) return;
+
+    const timer = window.setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+    }, 80);
+
+    return () => window.clearTimeout(timer);
+  }, [isHome]);
 
   const socialLinks = [
     { icon: Github, href: "https://github.com/linnmyatmaung", label: "GitHub" },
@@ -56,24 +79,42 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <span className="text-xl sm:text-2xl font-bold text-gradient">
+            <Link href="/" className="text-xl sm:text-2xl font-bold text-gradient">
               LMM
-            </span>
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <button onClick={() => scrollToSection("about")} className={navLinkClass}>
-              About
-            </button>
-            <button onClick={() => scrollToSection("skills")} className={navLinkClass}>
-              Skills
-            </button>
-            <button onClick={() => scrollToSection("projects")} className={navLinkClass}>
-              Projects
-            </button>
-            <button onClick={() => scrollToSection("contact")} className={navLinkClass}>
-              Contact
-            </button>
+            {homeLinks.map((link) =>
+              isHome ? (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={navLinkClass}
+                >
+                  {link.label}
+                </button>
+              ) : (
+                <Link key={link.id} href={`/#${link.id}`} className={navLinkClass}>
+                  {link.label}
+                </Link>
+              )
+            )}
+            <Link
+              href="/background"
+              className={cn(navLinkClass, isBackground && "text-primary after:w-full")}
+            >
+              Background
+            </Link>
+            {isHome ? (
+              <button onClick={() => scrollToSection("contact")} className={navLinkClass}>
+                Contact
+              </button>
+            ) : (
+              <Link href="/#contact" className={navLinkClass}>
+                Contact
+              </Link>
+            )}
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -114,30 +155,52 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-primary/10 animate-fade-in">
             <div className="flex flex-col space-y-4">
-              <button
-                onClick={() => scrollToSection("about")}
-                className="text-foreground hover:text-primary transition-smooth text-left"
+              {homeLinks.map((link) =>
+                isHome ? (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollToSection(link.id)}
+                    className="text-foreground hover:text-primary transition-smooth text-left"
+                  >
+                    {link.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={link.id}
+                    href={`/#${link.id}`}
+                    className="text-foreground hover:text-primary transition-smooth text-left"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
+              <Link
+                href="/background"
+                className={cn(
+                  "text-foreground hover:text-primary transition-smooth text-left",
+                  isBackground && "text-primary"
+                )}
+                onClick={() => setIsMenuOpen(false)}
               >
-                About
-              </button>
-              <button
-                onClick={() => scrollToSection("skills")}
-                className="text-foreground hover:text-primary transition-smooth text-left"
-              >
-                Skills
-              </button>
-              <button
-                onClick={() => scrollToSection("projects")}
-                className="text-foreground hover:text-primary transition-smooth text-left"
-              >
-                Projects
-              </button>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="text-foreground hover:text-primary transition-smooth text-left"
-              >
-                Contact
-              </button>
+                Background
+              </Link>
+              {isHome ? (
+                <button
+                  onClick={() => scrollToSection("contact")}
+                  className="text-foreground hover:text-primary transition-smooth text-left"
+                >
+                  Contact
+                </button>
+              ) : (
+                <Link
+                  href="/#contact"
+                  className="text-foreground hover:text-primary transition-smooth text-left"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contact
+                </Link>
+              )}
 
               <div className="flex items-center space-x-4 pt-4">
                 {socialLinks.map((social) => (
