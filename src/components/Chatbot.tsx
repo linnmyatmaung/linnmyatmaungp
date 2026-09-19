@@ -31,7 +31,7 @@ async function requestChat(message: string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(28000),
   });
   const text = await response.text();
   const data = parseChatResponse(text, response.headers.get("content-type") ?? "");
@@ -59,12 +59,7 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      let reply: string;
-      try {
-        reply = await requestChat(trimmedMessage);
-      } catch {
-        reply = await requestChat(trimmedMessage);
-      }
+      const reply = await requestChat(trimmedMessage);
       setMessages((current) => [...current, { role: "assistant", content: reply }]);
     } catch {
       setMessages((current) => [

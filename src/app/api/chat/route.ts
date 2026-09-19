@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
-export const maxDuration = 15;
+export const maxDuration = 26;
 
-const OPENROUTER_TIMEOUT_MS = 8000;
+const OPENROUTER_TIMEOUT_MS = 24000;
 const UNAVAILABLE = "Linn's assistant is unavailable right now. Please try again in a moment.";
 
 const personalContext = {
@@ -90,48 +90,36 @@ export async function POST(request: Request) {
 
     let lastError = UNAVAILABLE;
 
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        const { response, text } = await completeChat(request, message.trim());
+    try {
+      const { response, text } = await completeChat(request, message.trim());
 
-        if (!response.ok) {
-          console.error("OpenRouter error", response.status, text.slice(0, 500));
-          lastError = UNAVAILABLE;
-          if (attempt === 0 && (response.status === 429 || response.status >= 500)) {
-            continue;
-          }
-          return NextResponse.json({ error: lastError }, { status: 502 });
-        }
-
-        const contentType = response.headers.get("content-type") ?? "";
-        const looksLikeJson =
-          contentType.includes("application/json") || text.trim().startsWith("{");
-        if (!looksLikeJson) {
-          console.error("OpenRouter returned non-JSON", text.slice(0, 500));
-          lastError = UNAVAILABLE;
-          if (attempt === 0) continue;
-          return NextResponse.json({ error: lastError }, { status: 502 });
-        }
-
-        const data = JSON.parse(text) as {
-          choices?: { message?: { content?: string } }[];
-        };
-        const reply = data.choices?.[0]?.message?.content;
-
-        if (typeof reply !== "string" || !reply.trim()) {
-          lastError = "No response was returned.";
-          if (attempt === 0) continue;
-          return NextResponse.json({ error: lastError }, { status: 502 });
-        }
-
-        return NextResponse.json({ reply: reply.trim() });
-      } catch (error) {
-        console.error("Chat attempt failed", error);
-        lastError = UNAVAILABLE;
+      if (!response.ok) {
+        console.error("OpenRouter error", response.status, text.slice(0, 500));
+        return NextResponse.json({ error: lastError }, { status: 502 });
       }
-    }
 
-    return NextResponse.json({ error: lastError }, { status: 502 });
+      const contentType = response.headers.get("content-type") ?? "";
+      const looksLikeJson =
+        contentType.includes("application/json") || text.trim().startsWith("{");
+      if (!looksLikeJson) {
+        console.error("OpenRouter returned non-JSON", text.slice(0, 500));
+        return NextResponse.json({ error: lastError }, { status: 502 });
+      }
+
+      const data = JSON.parse(text) as {
+        choices?: { message?: { content?: string } }[];
+      };
+      const reply = data.choices?.[0]?.message?.content;
+
+      if (typeof reply !== "string" || !reply.trim()) {
+        return NextResponse.json({ error: "No response was returned." }, { status: 502 });
+      }
+
+      return NextResponse.json({ reply: reply.trim() });
+    } catch (error) {
+      console.error("Chat attempt failed", error);
+      return NextResponse.json({ error: lastError }, { status: 502 });
+    }
   } catch (error) {
     console.error("Chat route error", error);
     return NextResponse.json({ error: UNAVAILABLE }, { status: 500 });
