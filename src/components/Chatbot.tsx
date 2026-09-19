@@ -12,6 +12,36 @@ const recommendations = [
 
 type Message = { role: "assistant" | "user"; content: string };
 
+const UNAVAILABLE =
+  "Linn's assistant is unavailable right now. Please try again in a moment.";
+
+function parseChatResponse(text: string, contentType: string) {
+  const looksLikeJson =
+    contentType.includes("application/json") || text.trim().startsWith("{");
+  if (!looksLikeJson) return null;
+  try {
+    return JSON.parse(text) as { error?: string; reply?: string };
+  } catch {
+    return null;
+  }
+}
+
+async function requestChat(message: string) {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+    signal: AbortSignal.timeout(15000),
+  });
+  const text = await response.text();
+  const data = parseChatResponse(text, response.headers.get("content-type") ?? "");
+  if (!data) throw new Error(UNAVAILABLE);
+  if (!response.ok || typeof data.reply !== "string") {
+    throw new Error(data.error || UNAVAILABLE);
+  }
+  return data.reply;
+}
+
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -29,43 +59,17 @@ export default function Chatbot() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmedMessage }),
-      });
-      const text = await response.text();
-      const contentType = response.headers.get("content-type") ?? "";
-      const looksLikeJson =
-        contentType.includes("application/json") || text.trim().startsWith("{");
-
-      if (!looksLikeJson) {
-        throw new Error("Linn's assistant is unavailable right now.");
-      }
-
-      let data: { error?: string; reply?: string };
+      let reply: string;
       try {
-        data = JSON.parse(text) as { error?: string; reply?: string };
+        reply = await requestChat(trimmedMessage);
       } catch {
-        throw new Error("Linn's assistant is unavailable right now.");
+        reply = await requestChat(trimmedMessage);
       }
-      if (!response.ok || typeof data.reply !== "string") {
-        throw new Error(data.error || "Linn's assistant is unavailable right now.");
-      }
-
-      setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
-    } catch (error) {
+      setMessages((current) => [...current, { role: "assistant", content: reply }]);
+    } catch {
       setMessages((current) => [
         ...current,
-        {
-          role: "assistant",
-          content:
-            error instanceof SyntaxError
-              ? "Linn's assistant is unavailable right now."
-              : error instanceof Error
-                ? error.message
-                : "Linn's assistant is unavailable right now.",
-        },
+        { role: "assistant", content: UNAVAILABLE },
       ]);
     } finally {
       setIsLoading(false);

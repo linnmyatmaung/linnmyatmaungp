@@ -21,30 +21,18 @@ const Contact = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setIsLoading(true);
     try {
-      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
-      if (!accessKey) {
-        throw new Error("Web3Forms is not configured");
-      }
+      const payload = new FormData(e.currentTarget);
+      payload.append("access_key", "23c6718a-aed8-4c96-b3d4-e12b090557dd");
+      payload.append("subject", `Portfolio contact from ${formData.name.trim()}`);
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          message: formData.message.trim(),
-          subject: `Portfolio contact from ${formData.name.trim()}`,
-          botcheck: false,
-        }),
+        body: payload,
       });
 
       const text = await response.text();
@@ -133,6 +121,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="Your name"
                   value={formData.name}
@@ -151,6 +140,7 @@ const Contact = () => {
                 </label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="your.email@example.com"
                   value={formData.email}
@@ -169,6 +159,7 @@ const Contact = () => {
                 </label>
                 <Textarea
                   id="message"
+                  name="message"
                   placeholder="Tell me about your project..."
                   value={formData.message}
                   onChange={(e) =>
