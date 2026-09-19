@@ -34,13 +34,38 @@ export default function Chatbot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: trimmedMessage }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error);
+      const text = await response.text();
+      const contentType = response.headers.get("content-type") ?? "";
+      const looksLikeJson =
+        contentType.includes("application/json") || text.trim().startsWith("{");
+
+      if (!looksLikeJson) {
+        throw new Error("Linn's assistant is unavailable right now.");
+      }
+
+      let data: { error?: string; reply?: string };
+      try {
+        data = JSON.parse(text) as { error?: string; reply?: string };
+      } catch {
+        throw new Error("Linn's assistant is unavailable right now.");
+      }
+      if (!response.ok || typeof data.reply !== "string") {
+        throw new Error(data.error || "Linn's assistant is unavailable right now.");
+      }
+
       setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
     } catch (error) {
       setMessages((current) => [
         ...current,
-        { role: "assistant", content: error instanceof Error ? error.message : "Something went wrong." },
+        {
+          role: "assistant",
+          content:
+            error instanceof SyntaxError
+              ? "Linn's assistant is unavailable right now."
+              : error instanceof Error
+                ? error.message
+                : "Linn's assistant is unavailable right now.",
+        },
       ]);
     } finally {
       setIsLoading(false);

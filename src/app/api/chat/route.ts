@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+
 const personalContext = {
   name: "Linn Myat Maung",
   nickname: "Lucas",
@@ -34,7 +36,11 @@ export async function POST(request: Request) {
     }
 
     if (!process.env.OPENROUTER_API_KEY) {
-      return NextResponse.json({ error: " not configured yet." }, { status: 503 });
+      console.error("OPENROUTER_API_KEY is not set");
+      return NextResponse.json(
+        { error: "The chat assistant is not configured yet." },
+        { status: 503 }
+      );
     }
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -57,11 +63,29 @@ export async function POST(request: Request) {
       }),
     });
 
+    const text = await response.text();
     if (!response.ok) {
-      return NextResponse.json({ error: "Linn's assistant is unavailable right now." }, { status: 502 });
+      console.error("OpenRouter error", response.status, text.slice(0, 500));
+      return NextResponse.json(
+        { error: "Linn's assistant is unavailable right now." },
+        { status: 502 }
+      );
     }
 
-    const data = await response.json();
+    const contentType = response.headers.get("content-type") ?? "";
+    const looksLikeJson =
+      contentType.includes("application/json") || text.trim().startsWith("{");
+    if (!looksLikeJson) {
+      console.error("OpenRouter returned non-JSON", text.slice(0, 500));
+      return NextResponse.json(
+        { error: "Linn's assistant is unavailable right now." },
+        { status: 502 }
+      );
+    }
+
+    const data = JSON.parse(text) as {
+      choices?: { message?: { content?: string } }[];
+    };
     const reply = data.choices?.[0]?.message?.content;
 
     if (typeof reply !== "string" || !reply.trim()) {
@@ -69,7 +93,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ reply: reply.trim() });
-  } catch {
+  } catch (error) {
+    console.error("Chat route error", error);
     return NextResponse.json({ error: "Unable to reach the chat assistant." }, { status: 500 });
   }
 }

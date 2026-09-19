@@ -26,13 +26,41 @@ const Contact = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/contact", {
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+      if (!accessKey) {
+        throw new Error("Web3Forms is not configured");
+      }
+
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+          subject: `Portfolio contact from ${formData.name.trim()}`,
+          botcheck: false,
+        }),
       });
 
-      if (!response.ok) throw new Error("Message could not be sent");
+      const text = await response.text();
+      const contentType = response.headers.get("content-type") ?? "";
+      const looksLikeJson =
+        contentType.includes("application/json") || text.trim().startsWith("{");
+      let data: { success?: boolean } | null = null;
+      if (looksLikeJson) {
+        try {
+          data = JSON.parse(text) as { success?: boolean };
+        } catch {
+          data = null;
+        }
+      }
+
+      if (!data?.success) throw new Error("Message could not be sent");
 
       toast({
         title: "✅ Message Sent!",
