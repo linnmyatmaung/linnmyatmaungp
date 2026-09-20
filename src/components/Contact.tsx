@@ -11,6 +11,60 @@ import { useInView } from "@/hooks/use-in-view";
 import { cn } from "@/lib/utils";
 
 
+const WEB3FORMS_ACCESS_KEY = "23c6718a-aed8-4c96-b3d4-e12b090557dd";
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+
+async function web3formsSucceeded(response: Response) {
+  const text = await response.text();
+  const contentType = response.headers.get("content-type") ?? "";
+  const looksLikeJson =
+    contentType.includes("application/json") || text.trim().startsWith("{");
+  if (!looksLikeJson) return false;
+  try {
+    const data = JSON.parse(text) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
+async function sendContactEmail(fields: { name: string; email: string; message: string }) {
+  const payload = {
+    access_key: WEB3FORMS_ACCESS_KEY,
+    name: fields.name,
+    email: fields.email,
+    message: fields.message,
+    subject: `Portfolio contact from ${fields.name}`,
+    from_name: "Portfolio Contact",
+    botcheck: false,
+  };
+
+  const jsonResponse = await fetch(WEB3FORMS_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (await web3formsSucceeded(jsonResponse)) return true;
+
+  const formPayload = new FormData();
+  formPayload.append("access_key", payload.access_key);
+  formPayload.append("name", payload.name);
+  formPayload.append("email", payload.email);
+  formPayload.append("message", payload.message);
+  formPayload.append("subject", payload.subject);
+  formPayload.append("from_name", payload.from_name);
+  formPayload.append("botcheck", "false");
+
+  const formResponse = await fetch(WEB3FORMS_URL, {
+    method: "POST",
+    body: formPayload,
+  });
+  return web3formsSucceeded(formResponse);
+}
+
 const Contact = () => {
   const { ref, inView } = useInView();
   const { toast } = useToast();
@@ -26,29 +80,12 @@ const Contact = () => {
 
     setIsLoading(true);
     try {
-      const payload = new FormData(e.currentTarget);
-      payload.append("access_key", "23c6718a-aed8-4c96-b3d4-e12b090557dd");
-      payload.append("subject", `Portfolio contact from ${formData.name.trim()}`);
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: payload,
+      const sent = await sendContactEmail({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim(),
       });
-
-      const text = await response.text();
-      const contentType = response.headers.get("content-type") ?? "";
-      const looksLikeJson =
-        contentType.includes("application/json") || text.trim().startsWith("{");
-      let data: { success?: boolean } | null = null;
-      if (looksLikeJson) {
-        try {
-          data = JSON.parse(text) as { success?: boolean };
-        } catch {
-          data = null;
-        }
-      }
-
-      if (!data?.success) throw new Error("Message could not be sent");
+      if (!sent) throw new Error("Message could not be sent");
 
       toast({
         title: "✅ Message Sent!",
@@ -114,7 +151,20 @@ const Contact = () => {
         <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
           {/* ── Contact Form ── */}
           <Card className="gradient-card border-border/80 p-6 lg:p-8 bg-white/90 shadow-soft">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              onSubmit={handleSubmit}
+              action="https://api.web3forms.com/submit"
+              method="POST"
+              data-netlify="false"
+              className="space-y-6"
+            >
+              <input
+                type="hidden"
+                name="access_key"
+                value={WEB3FORMS_ACCESS_KEY}
+              />
+              <input type="hidden" name="subject" value="Portfolio contact" />
+              <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
               <div>
                 <label htmlFor="name" className="block text-sm font-medium mb-2">
                   Name

@@ -2,5 +2,8 @@
   command = "npm run build"
   publish = ".next"
 
+[build.processing]
+  skip_processing = true
+
 [functions]
   timeout = 26

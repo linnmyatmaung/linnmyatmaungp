@@ -61,10 +61,20 @@ export default function Chatbot() {
     try {
       const reply = await requestChat(trimmedMessage);
       setMessages((current) => [...current, { role: "assistant", content: reply }]);
-    } catch {
+    } catch (error) {
+      const messageText =
+        error instanceof Error &&
+        error.message &&
+        !error.message.includes("Failed to fetch") &&
+        !error.message.includes("Unexpected token") &&
+        !error.message.toLowerCase().includes("timeout") &&
+        error.name !== "TimeoutError" &&
+        error.name !== "AbortError"
+          ? error.message
+          : UNAVAILABLE;
       setMessages((current) => [
         ...current,
-        { role: "assistant", content: UNAVAILABLE },
+        { role: "assistant", content: messageText },
       ]);
     } finally {
       setIsLoading(false);
