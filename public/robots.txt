@@ -1,3 +1,4 @@
+Sitemap: https://www.linnmyatmaung.me/sitemap.xml
 User-agent: Googlebot
 Allow: /
 
