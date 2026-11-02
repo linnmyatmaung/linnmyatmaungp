@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 10;
+export const maxDuration = 25;
 
 const UNAVAILABLE =
   "Linn's assistant is unavailable right now. Please try again in a moment.";
@@ -47,8 +47,7 @@ function siteUrl(request: Request) {
 }
 
 function openRouterTimeoutMs() {
-  if (process.env.VERCEL === "1") return 8000;
-  return 24000;
+  return 25000;
 }
 
 async function completeChat(request: Request, message: string, apiKey: string) {
@@ -61,12 +60,12 @@ async function completeChat(request: Request, message: string, apiKey: string) {
       "X-Title": "Linn Myat Maung Portfolio",
     },
     body: JSON.stringify({
-      model: process.env.OPENROUTER_MODEL || "meta-llama/llama-3.2-3b-instruct:free",
+      model: process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini",
       max_tokens: 250,
       messages: [
         {
           role: "system",
-          content: `Respond in first person as Linn Myat Maung. Be friendly, concise, and professional. Only use the information below. If something is not included, say you prefer not to share it or do not remember.\n\n${JSON.stringify(personalContext)}`,
+          content: `Respond in first person as Linn Myat Maung. Be friendly, concise, and professional. Only use the information below. If something is not included, say you prefer not to share it. Keep answers short but informative.\n\n${JSON.stringify(personalContext, null, 2)}`,
         },
         { role: "user", content: message },
       ],
