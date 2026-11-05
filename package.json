@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "firebase:build": "node scripts/firebase-build.js",
     "start": "next start",
     "lint": "next lint"
   },

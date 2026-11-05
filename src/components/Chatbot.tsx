@@ -16,18 +16,21 @@ type Message = { role: "assistant" | "user"; content: string };
 const UNAVAILABLE =
   "Linn's assistant is unavailable right now. Please try again in a moment.";
 
-function parseChatResponse(text: string, contentType: string) {
+function parseChatError(text: string, contentType: string) {
   const looksLikeJson =
     contentType.includes("application/json") || text.trim().startsWith("{");
-  if (!looksLikeJson) return null;
-  try {
-    return JSON.parse(text) as { error?: string; reply?: string };
-  } catch {
-    return null;
+  if (looksLikeJson) {
+    try {
+      const data = JSON.parse(text) as { error?: string };
+      if (typeof data.error === "string") return data.error;
+    } catch {
+      // Fall through to the plain-text error body.
+    }
   }
+  return text.trim() || UNAVAILABLE;
 }
 
-async function requestChat(message: string) {
+async function requestChat(message: string, onChunk: (chunk: string) => void) {
   if (!CHAT_API_URL) throw new Error("Chat assistant is not configured yet.");
   const response = await fetch(`${CHAT_API_URL}/chat`, {
     method: "POST",
@@ -35,13 +38,29 @@ async function requestChat(message: string) {
     body: JSON.stringify({ message }),
     signal: AbortSignal.timeout(28000),
   });
-  const text = await response.text();
-  const data = parseChatResponse(text, response.headers.get("content-type") ?? "");
-  if (!data) throw new Error(UNAVAILABLE);
-  if (!response.ok || typeof data.reply !== "string") {
-    throw new Error(data.error || UNAVAILABLE);
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(
+      parseChatError(text, response.headers.get("content-type") ?? ""),
+    );
   }
-  return data.reply;
+
+  if (!response.body) throw new Error(UNAVAILABLE);
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      if (chunk) onChunk(chunk);
+    }
+    const finalChunk = decoder.decode();
+    if (finalChunk) onChunk(finalChunk);
+  } finally {
+    reader.releaseLock();
+  }
 }
 
 export default function Chatbot() {
@@ -57,12 +76,27 @@ export default function Chatbot() {
     if (!trimmedMessage || isLoading) return;
 
     setInput("");
-    setMessages((current) => [...current, { role: "user", content: trimmedMessage }]);
+    setMessages((current) => [
+      ...current,
+      { role: "user", content: trimmedMessage },
+      { role: "assistant", content: "" },
+    ]);
     setIsLoading(true);
 
     try {
-      const reply = await requestChat(trimmedMessage);
-      setMessages((current) => [...current, { role: "assistant", content: reply }]);
+      let receivedText = "";
+      await requestChat(trimmedMessage, (chunk) => {
+        receivedText += chunk;
+        setMessages((current) => {
+          const lastMessage = current[current.length - 1];
+          if (lastMessage?.role !== "assistant") return current;
+          return [
+            ...current.slice(0, -1),
+            { ...lastMessage, content: lastMessage.content + chunk },
+          ];
+        });
+      });
+      if (!receivedText) throw new Error(UNAVAILABLE);
     } catch (error) {
       const messageText =
         error instanceof Error &&
@@ -74,10 +108,21 @@ export default function Chatbot() {
         error.name !== "AbortError"
           ? error.message
           : UNAVAILABLE;
-      setMessages((current) => [
-        ...current,
-        { role: "assistant", content: messageText },
-      ]);
+      setMessages((current) => {
+        const lastMessage = current[current.length - 1];
+        if (lastMessage?.role !== "assistant") {
+          return [...current, { role: "assistant", content: messageText }];
+        }
+        return [
+          ...current.slice(0, -1),
+          {
+            ...lastMessage,
+            content: lastMessage.content
+              ? `${lastMessage.content}\n\n${messageText}`
+              : messageText,
+          },
+        ];
+      });
     } finally {
       setIsLoading(false);
     }
