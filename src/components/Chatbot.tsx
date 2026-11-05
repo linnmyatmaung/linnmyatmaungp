@@ -145,10 +145,13 @@ export default function Chatbot() {
           <div className="flex-1 space-y-3 overflow-y-auto bg-secondary/45 p-4">
             {messages.map((message, index) => (
               <div key={`${message.role}-${index}`} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                <p className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${message.role === "user" ? "rounded-br-sm bg-primary text-white" : "rounded-bl-sm border border-primary/10 bg-white text-foreground shadow-sm"}`}>{message.content}</p>
+                <p className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${message.role === "user" ? "rounded-br-sm bg-primary text-white" : "rounded-bl-sm border border-primary/10 bg-white text-foreground shadow-sm"}`}>
+                  {message.role === "assistant" && isLoading && index === messages.length - 1 && !message.content ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" aria-label="Generating reply" />
+                  ) : message.content}
+                </p>
               </div>
             ))}
-            {isLoading && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-sm border border-primary/10 bg-white px-4 py-3"><Loader2 className="h-4 w-4 animate-spin text-primary" /></div></div>}
           </div>
 
           <div className="border-t border-primary/10 bg-white p-3">
