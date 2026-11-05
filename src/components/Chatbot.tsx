@@ -15,6 +15,11 @@ type Message = { role: "assistant" | "user"; content: string };
 const UNAVAILABLE =
   "Linn's assistant is unavailable right now. Please try again in a moment.";
 
+const CHAT_API_URL = (
+  process.env.NEXT_PUBLIC_CHAT_API_URL ||
+  "https://generative-ai-chatbot-v8pg.onrender.com"
+).replace(/\/+$/, "");
+
 function parseChatResponse(text: string, contentType: string) {
   const looksLikeJson =
     contentType.includes("application/json") || text.trim().startsWith("{");
@@ -27,7 +32,8 @@ function parseChatResponse(text: string, contentType: string) {
 }
 
 async function requestChat(message: string) {
-  const response = await fetch("/api/chat", {
+  if (!CHAT_API_URL) throw new Error("Chat assistant is not configured yet.");
+  const response = await fetch(`${CHAT_API_URL}/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
