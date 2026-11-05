@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import BackendHealthCheck from "@/components/BackendHealthCheck";
 
 export const metadata: Metadata = {
   title: "Linn Myat Maung | Software Developer & AI Engineer",
@@ -54,7 +55,10 @@ export default function RootLayout({
         className="font-sans"
         suppressHydrationWarning
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <BackendHealthCheck />
+          {children}
+        </Providers>
       </body>
     </html>
   );

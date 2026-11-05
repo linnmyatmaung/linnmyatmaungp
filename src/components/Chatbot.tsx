@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useState } from "react";
+import { CHAT_API_URL } from "@/lib/chat-api";
 
 const recommendations = [
   "Tell me about Linn's skills",
@@ -14,11 +15,6 @@ type Message = { role: "assistant" | "user"; content: string };
 
 const UNAVAILABLE =
   "Linn's assistant is unavailable right now. Please try again in a moment.";
-
-const CHAT_API_URL = (
-  process.env.NEXT_PUBLIC_CHAT_API_URL ||
-  "https://generative-ai-chatbot-v8pg.onrender.com"
-).replace(/\/+$/, "");
 
 function parseChatResponse(text: string, contentType: string) {
   const looksLikeJson =
