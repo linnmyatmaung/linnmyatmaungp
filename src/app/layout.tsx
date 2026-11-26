@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import BackendHealthCheck from "@/components/BackendHealthCheck";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: "Linn Myat Maung | Software Developer & AI Engineer",
@@ -59,6 +60,7 @@ export default function RootLayout({
           <BackendHealthCheck />
           {children}
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
